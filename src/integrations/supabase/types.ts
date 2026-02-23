@@ -14,16 +14,186 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      diary_entries: {
+        Row: {
+          content: string
+          created_at: string
+          entry_date: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          created_at: string
+          document_type: Database["public"]["Enums"]["document_type"]
+          file_name: string | null
+          file_path: string | null
+          id: string
+          uploaded: boolean
+          uploaded_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_type: Database["public"]["Enums"]["document_type"]
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          uploaded?: boolean
+          uploaded_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_type?: Database["public"]["Enums"]["document_type"]
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          uploaded?: boolean
+          uploaded_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          cycle: Database["public"]["Enums"]["cycle_type"]
+          id: string
+          name: string
+          speciality: string
+          surnames: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cycle: Database["public"]["Enums"]["cycle_type"]
+          id?: string
+          name: string
+          speciality: string
+          surnames: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cycle?: Database["public"]["Enums"]["cycle_type"]
+          id?: string
+          name?: string
+          speciality?: string
+          surnames?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      weekly_reports: {
+        Row: {
+          created_at: string
+          file_name: string | null
+          file_path: string | null
+          id: string
+          report_text: string | null
+          updated_at: string
+          uploaded: boolean
+          uploaded_at: string | null
+          user_id: string
+          week_number: number
+        }
+        Insert: {
+          created_at?: string
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          report_text?: string | null
+          updated_at?: string
+          uploaded?: boolean
+          uploaded_at?: string | null
+          user_id: string
+          week_number: number
+        }
+        Update: {
+          created_at?: string
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          report_text?: string | null
+          updated_at?: string
+          uploaded?: boolean
+          uploaded_at?: string | null
+          user_id?: string
+          week_number?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "student"
+      cycle_type: "MEDIO" | "SUPERIOR"
+      document_type:
+        | "memoria_practicas"
+        | "learning_agreement"
+        | "convenio_erasmus"
+        | "certificado_empresa"
+        | "prueba_idioma_inicial"
+        | "prueba_idioma_final"
+        | "tarjetas_embarque"
+        | "encuesta_colegio"
+        | "encuesta_gobierno_vasco"
+        | "encuesta_europea"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +320,21 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "student"],
+      cycle_type: ["MEDIO", "SUPERIOR"],
+      document_type: [
+        "memoria_practicas",
+        "learning_agreement",
+        "convenio_erasmus",
+        "certificado_empresa",
+        "prueba_idioma_inicial",
+        "prueba_idioma_final",
+        "tarjetas_embarque",
+        "encuesta_colegio",
+        "encuesta_gobierno_vasco",
+        "encuesta_europea",
+      ],
+    },
   },
 } as const
