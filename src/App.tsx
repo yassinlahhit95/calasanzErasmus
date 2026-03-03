@@ -14,6 +14,8 @@ import Guide from "./pages/Guide";
 import Admin from "./pages/Admin";
 import CompleteProfile from "./pages/CompleteProfile";
 import NotFound from "./pages/NotFound";
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 const queryClient = new QueryClient();
 
