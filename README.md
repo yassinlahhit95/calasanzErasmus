@@ -3,7 +3,6 @@
 calasanzinternationalcampusapp
 ├─ .env
 ├─ bun.lockb
-├─ calasanz-489013-e740cd5965e8.json
 ├─ components.json
 ├─ eslint.config.js
 ├─ index.html
@@ -88,6 +87,8 @@ calasanzinternationalcampusapp
 │  ├─ main.tsx
 │  ├─ pages
 │  │  ├─ Admin.tsx
+│  │  ├─ api
+│  │  │  └─ save.ts
 │  │  ├─ CompleteProfile.tsx
 │  │  ├─ Dashboard.tsx
 │  │  ├─ Diary.tsx
@@ -103,8 +104,11 @@ calasanzinternationalcampusapp
 │  │  └─ setup.ts
 │  └─ vite-env.d.ts
 ├─ supabase
+│  ├─ .temp
+│  │  └─ cli-latest
 │  ├─ config.toml
 │  ├─ functions
+│  │  ├─ deno.json
 │  │  └─ notify-upload
 │  │     └─ index.ts
 │  └─ migrations
