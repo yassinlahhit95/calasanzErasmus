@@ -75,10 +75,29 @@ export default function WeeklyReports() {
     } else {
       toast.success(`Reporte de la semana ${week} enviado`);
       try {
-        await supabase.functions.invoke("notify-upload", {
-          body: { type: "weekly_report", week, fileName },
-        });
-      } catch {}
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = async () => {
+            const base64 = (reader.result as string).split(",")[1];
+            await supabase.functions.invoke("notify-upload", {
+              body: { 
+                type: "weekly_report", 
+                week, 
+                fileName: file.name,
+                fileContent: base64,
+                reportText: reportText
+              },
+            });
+          };
+          reader.readAsDataURL(file);
+        } else {
+          await supabase.functions.invoke("notify-upload", {
+            body: { type: "weekly_report", week, reportText: reportText },
+          });
+        }
+      } catch (err) {
+        console.error("Google Drive sync error:", err);
+      }
       setOpenWeek(null);
       setReportText("");
       fetchReports();

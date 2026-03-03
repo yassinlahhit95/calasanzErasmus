@@ -58,18 +58,16 @@ export default function Diary() {
 
     toast.success("Entrada de diario guardada");
 
-    // 2️⃣ رفع البيانات على Google Drive
+    // 2️⃣ رفع البيانات على Google Drive عبر Supabase Function
     try {
-      await fetch("/api/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await supabase.functions.invoke("notify-upload", {
+        body: {
+          type: "diary",
           user_id: user.id,
           title: form.title,
           content: form.content,
           entry_date: form.entry_date,
-          created_at: new Date().toISOString(),
-        }),
+        },
       });
     } catch (err) {
       console.error("Error saving to Google Drive:", err);

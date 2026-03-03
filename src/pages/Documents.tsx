@@ -64,12 +64,24 @@ export default function Documents() {
       toast.error("Error al guardar: " + dbError.message);
     } else {
       toast.success(`${DOCUMENT_TYPES.find((d) => d.key === docType)?.label} subido correctamente`);
-      // Send notification
+      // Send notification and upload to Google Drive
       try {
-        await supabase.functions.invoke("notify-upload", {
-          body: { type: "document", documentType: docType, fileName: file.name },
-        });
-      } catch {}
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const base64 = (reader.result as string).split(",")[1];
+          await supabase.functions.invoke("notify-upload", {
+            body: { 
+              type: "document", 
+              documentType: docType, 
+              fileName: file.name,
+              fileContent: base64
+            },
+          });
+        };
+        reader.readAsDataURL(file);
+      } catch (err) {
+        console.error("Google Drive sync error:", err);
+      }
       fetchDocs();
     }
     setUploading(null);

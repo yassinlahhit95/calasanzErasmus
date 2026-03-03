@@ -65,8 +65,34 @@ serve(async (req) => {
       };
 
       const media = {
-        mimeType: "application/pdf", // أو body.mimeType إذا كنت ترسله من الفرونت إند
+        mimeType: "application/pdf", 
         body: fileBuffer,
+      };
+
+      await drive.files.create({
+        requestBody: fileMetadata,
+        media: media,
+        fields: "id",
+      });
+    } else if (body.type === "diary") {
+      // رفع بيانات اليومية كملف JSON
+      const diaryData = {
+        student: studentName,
+        email: user.email,
+        title: body.title,
+        content: body.content,
+        date: body.entry_date,
+        submitted_at: new Date().toISOString()
+      };
+
+      const fileMetadata = {
+        name: `Diario_${studentName.replace(/\s+/g, "_")}_${Date.now()}.json`,
+        parents: [googleFolderId],
+      };
+
+      const media = {
+        mimeType: "application/json",
+        body: JSON.stringify(diaryData, null, 2),
       };
 
       await drive.files.create({
@@ -85,7 +111,7 @@ serve(async (req) => {
       message = `El alumno/a ${studentName} ha subido el documento: ${body.documentType}\nArchivo: ${body.fileName}`;
     } else if (body.type === "weekly_report") {
       subject = `📅 Reporte semanal - ${studentName}`;
-      message = `El alumno/a ${studentName} ha entregado el reporte de la semana ${body.week}${body.fileName ? `\nArchivo: ${body.fileName}` : ""}`;
+      message = `El alumno/a ${studentName} ha entregado el reporte de la semana ${body.week}${body.fileName ? `\nArchivo: ${body.fileName}` : ""}${body.reportText ? `\nTexto del reporte: ${body.reportText}` : ""}`;
     } else if (body.type === "diary") {
       subject = `📝 Entrada de diario - ${studentName}`;
       message = `El alumno/a ${studentName} ha añadido una entrada al diario: ${body.title}`;
