@@ -42,6 +42,7 @@ export default function Diary() {
     if (!user) return;
     setSaving(true);
 
+    // 1️⃣ حفظ في Supabase
     const { error } = await supabase.from("diary_entries").insert({
       user_id: user.id,
       title: form.title,
@@ -51,17 +52,34 @@ export default function Diary() {
 
     if (error) {
       toast.error("Error: " + error.message);
-    } else {
-      toast.success("Entrada de diario guardada");
-      try {
-        await supabase.functions.invoke("notify-upload", {
-          body: { type: "diary", title: form.title },
-        });
-      } catch {}
-      setForm({ title: "", content: "", entry_date: new Date().toISOString().split("T")[0] });
-      setShowForm(false);
-      fetchEntries();
+      setSaving(false);
+      return;
     }
+
+    toast.success("Entrada de diario guardada");
+
+    // 2️⃣ رفع البيانات على Google Drive
+    try {
+      await fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.id,
+          title: form.title,
+          content: form.content,
+          entry_date: form.entry_date,
+          created_at: new Date().toISOString(),
+        }),
+      });
+    } catch (err) {
+      console.error("Error saving to Google Drive:", err);
+      toast.error("No se pudo guardar en Google Drive");
+    }
+
+    // 3️⃣ إعادة تهيئة الفورم
+    setForm({ title: "", content: "", entry_date: new Date().toISOString().split("T")[0] });
+    setShowForm(false);
+    fetchEntries();
     setSaving(false);
   };
 
